@@ -1,0 +1,106 @@
+class Level12 {
+  static #stars = [];
+  static #mirror;
+  static #laser;
+  static #timeCounter = new Date().getTime()*0;
+  static #text_1;
+  static #text_2;
+  static #text_3;
+  static #text_4;
+  static #textShown = 1;
+  static #levelDelayTimer = new Date().getTime() * 0;
+  static #loadNext = false
+  
+  static loadData(){
+    Level12.#stars = [];
+    ShotsLeft = 12;
+    spawningDisabled = true;
+    MirrorSpawning = true;
+    restartDisabled = false;
+    eraserDisabled = true;
+    reflectiveWalls = false;
+     Level12.#laser = new Laser(window.innerWidth*0.1, window.innerHeight * 0.2,  window.innerWidth*0.1,  window.innerWidth * 0.1, 0, true, false, true);
+    currentlySelected = Level12.#laser;
+    Level12.#loadNext = false;
+    new StaticImage(back, window.innerWidth*0.01, window.innerHeight*0.01, window.innerWidth/20, window.innerWidth/20, 0, function a(){Level12.#loadNext=Levels});
+let tmp = new ShowText('Level 12:Impossible', window.innerHeight*0.10, window.innerWidth/50);
+    setTimeout(tmp.delete, 1000);
+    new ShotCounterText();
+    Level12.#text_1 = new ShowText("Shoot the stars");
+    Level12.#timeCounter = new Date().getTime();
+    eraserDisabled = true;
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+    Level12.#stars.push(generateRandomStars(Level12.#stars));
+  }
+  static calculation(){
+    for (const element of Level12.#stars){
+      let tmpVector = createVector(element.xPos-window.innerWidth/2, element.yPos-window.innerHeight/2);
+      tmpVector.rotate(2.5);
+      tmpVector.add(createVector(window.innerWidth/2, window.innerHeight/2))
+      element.xPos = tmpVector.x;
+      element.yPos = tmpVector.y;
+      element.hitBoxLeftTop = [element.xPos, element.yPos];
+      element.hitBoxRightBottom = [element.xPos+element.width, element.yPos+element.height];
+    }
+    
+    switch (Level12.#textShown) {
+      case 1:
+      if (Level12.#timeCounter+5000<new Date().getTime()){
+        Level12.#text_1.delete();
+        Level12.#text_2 = new ShowText('This is designed to test your limits');
+        Level12.#timeCounter = new Date().getTime();
+        Level12.#textShown = 2;
+      }
+      return;
+      case 2:
+      if (Level12.#timeCounter+ 7000<new Date().getTime()){
+        Level12.#text_2.delete();
+        Level12.#text_3 = new ShowText("Try to beat this boss level");
+        Level12.#timeCounter = new Date().getTime();
+        Level12.#textShown = 3;
+      }
+      return;
+      case 3:
+      if (Level12.#timeCounter+ 7000<new Date().getTime()){
+        Level12.#text_3.delete();
+        Level12.#text_4 = new ShowText("12 Shots;12 Stars");
+        Level12.#timeCounter = new Date().getTime();
+        Level12.#textShown = 4;
+      }
+       return;
+      case 4:
+      if (Level12.#timeCounter+ 7000<new Date().getTime()){
+        Level12.#text_4.delete();
+        Level12.#textShown = 5;
+        }
+        return;
+    }
+  }
+  static levelEnded(){
+    if (Level12.#loadNext != false){
+      return Level12.#loadNext;
+    }
+    if (!allStarsHit(Level12.#stars)){return false;}
+    if (allStarsHit(Level12.#stars) && Level12.#levelDelayTimer == 0){
+      Level12.#levelDelayTimer = new Date().getTime();
+      return false;
+    } else {
+      if (Level12.#levelDelayTimer+2000 < new Date().getTime()){
+        GameData.Levels.addCompletedLevel(12);
+        return Levels;
+      } else {
+        return false;
+      }
+    }
+  }
+}
